@@ -5,9 +5,9 @@ const Home = () => {
     return (
         <div>
             <Banner></Banner>
-            <div className="mb-24">
+            {/* <div className="mb-24"> */}
                 <Category></Category>
-            </div>
+            {/* </div> */}
         </div>
     );
 };
