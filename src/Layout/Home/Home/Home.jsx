@@ -1,13 +1,13 @@
 import Banner from "../Banner/Banner";
 import Category from "../Category/Category";
+import PopularMenu from "../PopularMenu/PopularMenu";
 
 const Home = () => {
     return (
         <div>
             <Banner></Banner>
-            {/* <div className="mb-24"> */}
-                <Category></Category>
-            {/* </div> */}
+            <Category></Category>
+            <PopularMenu></PopularMenu>
         </div>
     );
 };
