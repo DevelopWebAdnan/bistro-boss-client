@@ -16,7 +16,7 @@ const Testimonials = () => {
         fetch('/reviews.json')
             .then(res => res.json())
             .then(data => {
-                console.log('reviews', data);
+                // console.log('reviews', data);
                 setReviews(data);
             })
     }, [])
