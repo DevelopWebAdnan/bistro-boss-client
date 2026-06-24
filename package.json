@@ -16,6 +16,7 @@
     "match-sorter": "^8.3.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
+    "react-helmet-async": "^3.0.0",
     "react-responsive-carousel": "^3.2.23",
     "react-router-dom": "^7.18.0",
     "sort-by": "^1.2.0",
