@@ -6,16 +6,16 @@ import {
 } from "react-router-dom";
 import { router } from './Routes/Routes';
 import { HelmetProvider } from 'react-helmet-async';
-import { AuthContext } from './providers/AuthProvider';
+import AuthProvider from './providers/AuthProvider';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <AuthContext>
+    <AuthProvider>
       <HelmetProvider>
         <div className='max-w-7xl mx-auto'>
           <RouterProvider router={router} />
         </div>
       </HelmetProvider>
-    </AuthContext>
+    </AuthProvider>
   </StrictMode>,
 )
