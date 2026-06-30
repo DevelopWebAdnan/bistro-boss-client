@@ -7,17 +7,17 @@ import Swal from 'sweetalert2'
 
 const Login = () => {
 
+
+    const [disabled, setDisabled] = useState(true);
     const { signIn } = useContext(AuthContext);
     const navigate = useNavigate();
     const location = useLocation();
-    console.log(location);
+    // console.log(location);
     const from = location.state?.from?.pathname || '/';
 
     useEffect(() => {
         loadCaptchaEnginge(6);
     }, [])
-
-    const [disabled, setDisabled] = useState(true);
 
     const handleLogin = event => {
         event.preventDefault();
@@ -44,7 +44,7 @@ const Login = () => {
       animate__faster
     ` }
                 });
-                navigate(from, {replace: true});
+                navigate(from, { replace: true });
             })
     }
 
