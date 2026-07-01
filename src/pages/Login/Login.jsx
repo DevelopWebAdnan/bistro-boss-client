@@ -12,7 +12,7 @@ const Login = () => {
     const { signIn } = useContext(AuthContext);
     const navigate = useNavigate();
     const location = useLocation();
-    // console.log(location);
+    console.log('State value from location Login page', location.state);
     const from = location.state?.from?.pathname || '/';
 
     useEffect(() => {
@@ -89,7 +89,8 @@ const Login = () => {
 
                                 <input onBlur={handleValidateCaptcha} type="text" name="captcha" className="input" placeholder="type the captcha above" />
 
-                                <input disabled={disabled} className="btn btn-neutral mt-4" type="submit" value="Login" />
+                                {/* TODO: apply disabled for re captcha */}
+                                <input disabled={false} className="btn btn-neutral mt-4" type="submit" value="Login" />
                             </form>
                             <p><small>New here? <Link to="/signup">Create an account</Link></small></p>
                         </div>
