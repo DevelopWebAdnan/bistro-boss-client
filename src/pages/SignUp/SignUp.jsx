@@ -4,6 +4,7 @@ import { AuthContext } from "../../providers/AuthProvider";
 import { Helmet } from "react-helmet-async";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2'
+import useAxiosPublic from "../../hooks/useAxiosPublic";
 
 const SignUp = () => {
 
@@ -18,24 +19,37 @@ const SignUp = () => {
 
     const { createUser, updateUserProfile } = useContext(AuthContext);
 
+    const axiosPublic = useAxiosPublic();
+
     const onSubmit = (data) => {
-        console.log(data);
         createUser(data.email, data.password)
             .then(result => {
                 const loggedUser = result.user;
                 console.log(loggedUser);
                 updateUserProfile(data.name, data.photoURL)
                     .then(() => {
-                        console.log('User profile has been updated.')
-                        Swal.fire({
-                            position: "top-end",
-                            icon: "success",
-                            title: "User creation is successful.",
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
-                        reset();
-                        navigate("/");
+                        const userInfo = {
+                            name: data.name,
+                            email: data.email
+                        }
+
+                        // create user entry in the database
+                        axiosPublic.post('/users', userInfo)
+                            .then(res => {
+                                if (res.data.insertedId) {
+                                    console.log('user has been created successfully')
+                                    Swal.fire({
+                                        position: "top-end",
+                                        icon: "success",
+                                        title: "User creation is successful.",
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    });
+                                    reset();
+                                    navigate("/");
+                                }
+                            })
+
                     })
                     .catch(error => console.log(error));
             })
