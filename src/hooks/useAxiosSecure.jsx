@@ -1,15 +1,20 @@
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import useAuth from "./useAuth";
 
 const axiosSecure = axios.create({
     baseURL: 'http://localhost:5000'
 })
 
 const useAxiosSecure = () => {
-    // request interceptor to add a headers for all valid calls to the api
+    const navigate = useNavigate();
+    const { signOutUser } = useAuth();
+
+    // request interceptor to add an authorization header for all secure calls to the api
     axiosSecure.interceptors.request.use(
         function (config) {
             const token = localStorage.getItem('access-token');
-            console.log('Stopped by the interceptor', token);
+            // console.log('Stopped by the interceptor', token);
             config.headers.authorization = `Bearer ${token}`;
             return config;
         },
@@ -21,12 +26,17 @@ const useAxiosSecure = () => {
 
     // intercepts 401 and 403 status
     axiosSecure.interceptors.response.use(
-        function(response) {
+        function (response) {
             return response;
         },
-        (error) => {
+        async (error) => {
             const status = error.response.status
-            console.log('Error status in the response interceptor', status);
+            // console.log('Error status in the response interceptor', status);
+            // for 401 and 403 logout the user and send to the login page
+            if (status === 401 || status === 403) {
+                await signOutUser()
+                navigate('/login')
+            }
             return Promise.reject(error);
         }
     );
