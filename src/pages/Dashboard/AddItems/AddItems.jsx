@@ -1,11 +1,23 @@
 import { useForm } from "react-hook-form";
 import SectionTitle from "../../../components/SectionTitle/SectionTitle";
 import { FaUtensils } from "react-icons/fa";
+import useAxiosPublic from "../../../hooks/useAxiosPublic";
+
+const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
+const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
 
 const AddItems = () => {
+    const axiosPublic = useAxiosPublic();
     const { register, handleSubmit } = useForm()
-    const onSubmit = (data) => {
+    const onSubmit = async (data) => {
         console.log(data)
+        const imageFile = { image: data.image[0] };
+        const res = await axiosPublic.post(image_hosting_api, imageFile, {
+            headers: {
+                "content-type": "multipart/form-data",
+            }
+        })
+        console.log(res.data);
     }
     return (
         <div>
@@ -19,7 +31,7 @@ const AddItems = () => {
                         <input
                             type="text"
                             id="name"
-                            {...register("name", {required: true})}
+                            {...register("name", { required: true })}
                             className="input w-full"
                             placeholder="Recipe Name"
                             required />
@@ -30,7 +42,7 @@ const AddItems = () => {
                         <fieldset className="fieldset w-full">
                             <legend className="fieldset-legend">Category Selection*</legend>
                             {/* <label className="label">Category Selection*</label> */}
-                            <select {...register("category", {required: true})}
+                            <select {...register("category", { required: true })}
                                 defaultValue="Pick a category"
                                 className="select w-full">
                                 <option disabled={true}>Pick a category</option>
@@ -48,7 +60,7 @@ const AddItems = () => {
                             <input
                                 type="number"
                                 // id="price"
-                                {...register("price", {required: true})}
+                                {...register("price", { required: true })}
                                 className="input w-full"
                                 placeholder="Price" />
                         </fieldset>
@@ -66,7 +78,7 @@ const AddItems = () => {
                     <div className="w-full my-6">
                         <input
                             type="file"
-                            {...register("image", {required: true})}
+                            {...register("image", { required: true })}
                             className="file-input file-input-ghost" />
                     </div>
 
