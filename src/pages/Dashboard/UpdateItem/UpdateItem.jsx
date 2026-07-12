@@ -1,14 +1,15 @@
-import { useForm } from "react-hook-form";
+import Swal from "sweetalert2";
 import SectionTitle from "../../../components/SectionTitle/SectionTitle";
-import { FaUtensils } from "react-icons/fa";
 import useAxiosPublic from "../../../hooks/useAxiosPublic";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
-import Swal from "sweetalert2";
+import { useForm } from "react-hook-form";
+import { useLoaderData } from "react-router-dom";
 
 const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
 const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
 
-const AddItems = () => {
+const UpdateItem = () => {
+    const { name, category, recipe, price, _id } = useLoaderData();
     const axiosPublic = useAxiosPublic();
     const axiosSecure = useAxiosSecure();
     const { register, handleSubmit, reset } = useForm()
@@ -30,7 +31,7 @@ const AddItems = () => {
                 category: data.category,
                 image: res.data.data.display_url
             }
-            const menuRes = await axiosSecure.post('/menu', menuItem);
+            const menuRes = await axiosSecure.patch(`/menu/${_id}`, menuItem);
             console.log(menuRes.data);
             if (menuRes.data.insertedId) {
                 // show a success popup
@@ -38,7 +39,7 @@ const AddItems = () => {
                 Swal.fire({
                     position: "top-end",
                     icon: "success",
-                    title: `${data.name} has been added to the menu.`,
+                    title: `${data.name} has been updated to the menu.`,
                     showConfirmButton: false,
                     timer: 1500
                 });
@@ -46,18 +47,19 @@ const AddItems = () => {
         }
         console.log('with image url', res.data);
     }
+
     return (
         <div>
-            <SectionTitle heading="add an item" subHeading="What's new?"></SectionTitle>
+            <SectionTitle heading="Update an Item" subHeading="Refresh Info Prompt"></SectionTitle>
             <div>
                 <form onSubmit={handleSubmit(onSubmit)}>
-                    {/* <label>Recipe Name</label>
-                    <input {...register("name")} /> */}
+
                     <fieldset className="fieldset my-6">
                         <label className="label" htmlFor="name">Recipe Name*</label>
                         <input
                             type="text"
                             id="name"
+                            defaultValue={name}
                             {...register("name", { required: true })}
                             className="input w-full"
                             placeholder="Recipe Name"
@@ -68,9 +70,8 @@ const AddItems = () => {
                         {/* category */}
                         <fieldset className="fieldset w-full">
                             <legend className="fieldset-legend">Category Selection*</legend>
-                            {/* <label className="label">Category Selection*</label> */}
                             <select {...register("category", { required: true })}
-                                defaultValue="Pick a category"
+                                defaultValue={category}
                                 className="select w-full">
                                 <option disabled={true}>Pick a category</option>
                                 <option value="salad">Salad</option>
@@ -83,10 +84,9 @@ const AddItems = () => {
                         {/* Price */}
                         <fieldset className="fieldset w-full">
                             <legend className="fieldset-legend">Price*</legend>
-                            {/* <label className="label" htmlFor="price">Price*</label> */}
                             <input
                                 type="number"
-                                // id="price"
+                                defaultValue={price}
                                 {...register("price", { required: true })}
                                 className="input w-full"
                                 placeholder="Price" />
@@ -97,6 +97,7 @@ const AddItems = () => {
                         <legend className="fieldset-legend">Recipe Details</legend>
                         <textarea
                             {...register("recipe")}
+                            defaultValue={recipe}
                             className="textarea h-24 w-full"
                             placeholder="Recipe Details"
                         ></textarea>
@@ -110,7 +111,7 @@ const AddItems = () => {
                     </div>
 
                     <button className="btn">
-                        Add Item <FaUtensils></FaUtensils>
+                        Update Menu Item
                     </button>
                 </form>
             </div>
@@ -118,4 +119,4 @@ const AddItems = () => {
     );
 };
 
-export default AddItems;
+export default UpdateItem;
