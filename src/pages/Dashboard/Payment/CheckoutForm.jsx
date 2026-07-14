@@ -51,6 +51,7 @@ const CheckoutForm = () => {
             setError('');
         }
 
+        // confirm payment
         const { paymentIntent, error: confirmError } = await stripe.confirmCardPayment(clientSecret, {
             payment_method: {
                 card: card,
@@ -69,6 +70,20 @@ const CheckoutForm = () => {
             if (paymentIntent.status === 'succeeded') {
                 console.log('transacion id:', paymentIntent.id);
                 setTransactionId(paymentIntent.id);
+
+                // now save the payment in the database
+                const payment = {
+                    email: user.email,
+                    date: new Date(), // convert date to utc (unless all users pay from Bangladesh); use moment js to easily convert the definite date which we will save in the server side
+                    transactionId: paymentIntent.id,
+                    price: totalPrice,
+                    cartIds: cart.map(item => item._id),
+                    menuItemIds: cart.map(item => item.menuId),
+                    status: 'pending' 
+                }
+
+                const res = await axiosSecure.post('/payments', payment);
+                console.log('saved payment', res.data);
             }
         }
     }
