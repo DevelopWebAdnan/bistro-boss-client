@@ -66,9 +66,9 @@ const Dashboard = () => {
                                         Add a review</NavLink>
                                 </li>
                                 <li>
-                                    <NavLink to="/dashboard/bookings">
+                                    <NavLink to="/dashboard/paymentHistory">
                                         <FaCalendar></FaCalendar>
-                                        My Bookings</NavLink>
+                                        My Payment History</NavLink>
                                 </li>
                             </>
                     }

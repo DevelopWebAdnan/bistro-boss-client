@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import useCart from "../../../hooks/useCart";
 import useAuth from "../../../hooks/useAuth";
+import Swal from "sweetalert2";
 
 
 const CheckoutForm = () => {
@@ -12,16 +13,18 @@ const CheckoutForm = () => {
     const axiosSecure = useAxiosSecure();
     const stripe = useStripe();
     const elements = useElements();
-    const [cart] = useCart();
+    const [cart, refetch] = useCart();
     const { user } = useAuth();
     const totalPrice = cart.reduce((total, item) => total + item.price, 0);
 
     useEffect(() => {
-        axiosSecure.post('/create-payment-intent', { price: totalPrice })
-            .then(res => {
-                console.log(res.data.clientSecret);
-                setClientSecret(res.data.clientSecret);
-            })
+        if (totalPrice > 0) {
+            axiosSecure.post('/create-payment-intent', { price: totalPrice })
+                .then(res => {
+                    console.log(res.data.clientSecret);
+                    setClientSecret(res.data.clientSecret);
+                })
+        }
     }, [axiosSecure, totalPrice]);
 
     const handleSubmit = async (event) => {
@@ -79,11 +82,21 @@ const CheckoutForm = () => {
                     price: totalPrice,
                     cartIds: cart.map(item => item._id),
                     menuItemIds: cart.map(item => item.menuId),
-                    status: 'pending' 
+                    status: 'pending'
                 }
 
                 const res = await axiosSecure.post('/payments', payment);
                 console.log('saved payment', res.data);
+                refetch();
+                if (res.data?.paymentResult?.insertedId) {
+                    Swal.fire({
+                        position: "top-end",
+                        icon: "success",
+                        title: "Thank you for your payment",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
             }
         }
     }
