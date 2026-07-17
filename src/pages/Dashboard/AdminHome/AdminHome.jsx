@@ -11,7 +11,8 @@ const AdminHome = () => {
     const { data: stats } = useQuery({
         queryKey: ['admin-stats'],
         queryFn: async () => {
-            const res = await axiosSecure.get('/admin-stats')
+            const res = await axiosSecure.get('/admin-stats');
+            // console.log('data: stats', res.data);
             return res.data;
         }
     })
@@ -30,7 +31,7 @@ const AdminHome = () => {
                         <FaDollarSign className="text-3xl"></FaDollarSign>
                     </div>
                     <div className="stat-title">Revenue</div>
-                    <div className="stat-value">${stats.revenue}</div>
+                    <div className="stat-value">${stats?.revenue}</div>
                     <div className="stat-desc">Jan 1st - Feb 1st</div>
                 </div>
 
@@ -39,7 +40,7 @@ const AdminHome = () => {
                         <FaUsers className="text-3xl"></FaUsers>
                     </div>
                     <div className="stat-title">Users</div>
-                    <div className="stat-value">{stats.users}</div>
+                    <div className="stat-value">{stats?.users}</div>
                     <div className="stat-desc">↗︎ 400 (22%)</div>
                 </div>
 
@@ -49,7 +50,7 @@ const AdminHome = () => {
                         <FaBook className="text-3xl"></FaBook>
                     </div>
                     <div className="stat-title">Menu Items</div>
-                    <div className="stat-value">{stats.menuItems}</div>
+                    <div className="stat-value">{stats?.menuItems}</div>
                     <div className="stat-desc">↗︎ 400 (22%)</div>
                 </div>
 
@@ -70,7 +71,7 @@ const AdminHome = () => {
                         </svg>
                     </div>
                     <div className="stat-title">Orders</div>
-                    <div className="stat-value">{stats.orders}</div>
+                    <div className="stat-value">{stats?.orders}</div>
                     <div className="stat-desc">↘︎ 90 (14%)</div>
                 </div>
             </div>
