@@ -4,10 +4,10 @@ import useAdmin from "../hooks/useAdmin";
 
 const AdminRoute = ({ children }) => {
     const { user, loading } = useAuth();
-    const [isAdmin, isAdminPending] = useAdmin();
+    const [isAdmin, AdminPending] = useAdmin();
     const location = useLocation();
 
-    if (loading || isAdminPending) {
+    if (loading || AdminPending) {
         return <progress className="progress w-56"></progress>
     }
     
